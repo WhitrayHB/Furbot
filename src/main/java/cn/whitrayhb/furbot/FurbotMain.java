@@ -11,13 +11,15 @@ public final class FurbotMain extends JavaPlugin {
     private FurbotMain() {
         super(new JvmPluginDescriptionBuilder("cn.whitrayhb.furbot", "0.1.0")
                 .info("EG")
+                .name("FurBot插件")
+                .author("WhitrayHB")
                 .build());
     }
 
     @Override
     public void onEnable() {
-        //CommandManager.INSTANCE.registerCommand(FurPic.INSTANCE,true);
+        CommandManager.INSTANCE.registerCommand(FurPic.INSTANCE,true);
         CommandManager.INSTANCE.registerCommand(RandomFurPic.INSTANCE,true);
-        getLogger().info("Furbot插件已加载！");
+        getLogger().info("FurBot插件已加载！");
     }
 }

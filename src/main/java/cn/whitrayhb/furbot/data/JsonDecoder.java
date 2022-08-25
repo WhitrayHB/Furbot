@@ -34,15 +34,12 @@ public class JsonDecoder {
                             switch (reader.nextName()) {
                                 case "name":
                                     map.put("name", reader.nextString());
-                                    logger.info(map.get("name"));
                                     break;
                                 case "id":
                                     map.put("id", reader.nextString());
-                                    logger.info(map.get("id"));
                                     break;
                                 case "picture":
                                     map.put("picID", reader.nextString());
-                                    logger.info(map.get("picID"));
                                     break;
                                 default:
                                     reader.skipValue();
@@ -61,6 +58,9 @@ public class JsonDecoder {
                 }
             }
             reader.endObject();
+            if(map.isEmpty()){
+                return null;
+            }
             return map;
         }catch(Exception e){
             logger.error(e);
@@ -71,7 +71,7 @@ public class JsonDecoder {
     /**
      *解码查询图片所得JSON
      * @param picJson 输入
-     * @return
+     * @return 图片URL
      */
     public String decodePicJson(String picJson){
         if(picJson == null) {
@@ -91,6 +91,7 @@ public class JsonDecoder {
                         break;
                 }
             }
+            reader.endObject();
         }catch (Exception e){
             logger.error(e);
         }

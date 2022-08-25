@@ -21,7 +21,7 @@ public class RandomFurPic extends JRawCommand {
     private static MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
     public static final RandomFurPic INSTANCE = new RandomFurPic();
     public RandomFurPic() {
-        super(FurbotMain.INSTANCE,"random-furpic","来张毛图","来张福瑞图");
+        super(FurbotMain.INSTANCE,"random-furpic","来张毛图","来只福瑞");
         this.setDescription("来随机吸一只毛毛吧~");
         this.setUsage("来只毛");
         this.setPrefixOptional(true);
@@ -37,9 +37,10 @@ public class RandomFurPic extends JRawCommand {
             logger.info("Json解析失败！");
         }
         //构建查询图片ID信息JSON的URL
-        String picQueryURL = new StringBuilder().append("https://cloud.foxtail.cn/api/function/pictures?picture=")
-                .append(info.get("picID")).append("&model=").toString();
-        logger.info(picQueryURL);
+        String picQueryURL = new StringBuilder()
+                .append("https://cloud.foxtail.cn/api/function/pictures?picture=")
+                .append(info.get("picID"))
+                .append("&model=").toString();
         //获取查询图片ID信息JSON
         String picJson = FetchJson.fetchJson(picQueryURL);
         //解码图片ID查询信息JSON获取图片URL
@@ -54,10 +55,10 @@ public class RandomFurPic extends JRawCommand {
             ExternalResource resource = ExternalResource.create(file);
             Image image = sender.getSubject().uploadImage(resource);
             MessageChain message = new MessageChainBuilder()
-                    .append("--=每日毛图Bot=--\n")
+                    .append("---==每日毛图Bot==---\n")
                     .append("今天也记得吸毛了呢\n")
-                    .append("毛毛名字："+info.get("name")+"\n")
-                    .append("毛毛ID："+info.get("id")+"\n")
+                    .append("毛毛名字:"+info.get("name")+"\n")
+                    .append("毛毛ID: "+info.get("id")+"\n")
                     .append(image)
                     .append("咕Bot By WHB").build();
             sender.sendMessage(message);
