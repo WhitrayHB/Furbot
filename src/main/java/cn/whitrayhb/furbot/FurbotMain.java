@@ -1,5 +1,6 @@
 package cn.whitrayhb.furbot;
 
+import cn.whitrayhb.furbot.command.APIInfo;
 import cn.whitrayhb.furbot.command.FurPic;
 import cn.whitrayhb.furbot.command.RandomFurPic;
 import net.mamoe.mirai.console.command.CommandManager;
@@ -10,7 +11,7 @@ public final class FurbotMain extends JavaPlugin {
     public static final FurbotMain INSTANCE = new FurbotMain();
     private FurbotMain() {
         super(new JvmPluginDescriptionBuilder("cn.whitrayhb.furbot", "0.1.0")
-                .info("EG")
+                .info("Furbot")
                 .name("FurBot插件")
                 .author("WhitrayHB")
                 .build());
@@ -20,6 +21,7 @@ public final class FurbotMain extends JavaPlugin {
     public void onEnable() {
         CommandManager.INSTANCE.registerCommand(FurPic.INSTANCE,true);
         CommandManager.INSTANCE.registerCommand(RandomFurPic.INSTANCE,true);
+        CommandManager.INSTANCE.registerCommand(APIInfo.INSTANCE,true);
         getLogger().info("FurBot插件已加载！");
     }
 }

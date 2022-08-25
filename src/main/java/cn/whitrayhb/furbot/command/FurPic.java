@@ -31,15 +31,18 @@ public class FurPic extends JRawCommand {
     public void onCommand(@NotNull CommandSender sender, @NotNull MessageChain arg){
         //从指令中获取名称
         String name = arg.get(0).contentToString();
+        String type = null;
+        try{type = arg.get(1).contentToString();}catch(Exception ignored){}
         //构建查询URL
         String picIDQueryURL = new StringBuilder()
                 .append("https://cloud.foxtail.cn/api/function/random?name=")
                 .append(name)
-                .append("&type=").toString();
+                .append("&type=")
+                .append(type).toString();
         //拉取有图片ID的JSON
         String picQueryJson = FetchJson.fetchJson(picIDQueryURL);
         //解析JSON获得图片信息
-        HashMap info = JsonDecoder.INSTANCE.decodeQueryJson(picQueryJson);
+        HashMap info = JsonDecoder.decodeQueryJson(picQueryJson);
         if(info==null){
             sender.sendMessage("没有找到这只毛毛……");
             return;
@@ -52,7 +55,7 @@ public class FurPic extends JRawCommand {
         //获取查询图片ID信息JSON
         String picJson = FetchJson.fetchJson(picQueryURL);
         //获取图片链接
-        String picURL = JsonDecoder.INSTANCE.decodePicJson(picJson);
+        String picURL = JsonDecoder.decodePicJson(picJson);
         //图片保存的位置
         String savePath = "./data/cn.whitrayhb.furbot/cache/furpic/";
         //拉取图片并获取保存位置+图片名
@@ -67,7 +70,8 @@ public class FurPic extends JRawCommand {
                     .append("毛毛名字:"+info.get("name")+"\n")
                     .append("毛毛ID: "+info.get("id")+"\n")
                     .append(image)
-                    .append("咕Bot By WHB").build();
+                    .append("咕Bot By WHB")
+                    .append("API By 兽云祭").build();
             sender.sendMessage(message);
             try {
                 resource.close();

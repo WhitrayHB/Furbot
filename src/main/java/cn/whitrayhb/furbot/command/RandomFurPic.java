@@ -32,7 +32,7 @@ public class RandomFurPic extends JRawCommand {
         //拉取随机图片信息JSON
         String randomPicJson = FetchJson.fetchJson(randomPicJsonURL);
         //解码随机图片信息获取图片ID
-        HashMap info = JsonDecoder.INSTANCE.decodeQueryJson(randomPicJson);
+        HashMap info = JsonDecoder.decodeQueryJson(randomPicJson);
         if(info == null){
             logger.info("Json解析失败！");
         }
@@ -44,7 +44,7 @@ public class RandomFurPic extends JRawCommand {
         //获取查询图片ID信息JSON
         String picJson = FetchJson.fetchJson(picQueryURL);
         //解码图片ID查询信息JSON获取图片URL
-        String picURL = JsonDecoder.INSTANCE.decodePicJson(picJson);
+        String picURL = JsonDecoder.decodePicJson(picJson);
         //图片保存的位置
         String savePath = "./data/cn.whitrayhb.furbot/cache/furpic/";
         //拉取图片并返回保存的位置+文件名
