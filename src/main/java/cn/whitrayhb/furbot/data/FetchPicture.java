@@ -29,7 +29,7 @@ public class FetchPicture {
             URL url = new URL(inUrl);
             httpUrl = (HttpURLConnection) url.openConnection();
             httpUrl.setConnectTimeout(3000);
-            httpUrl.setReadTimeout(30000);
+            httpUrl.setReadTimeout(60000);
             httpUrl.connect();
             File file = new File(path);
             if(!file.exists()) file.mkdirs();

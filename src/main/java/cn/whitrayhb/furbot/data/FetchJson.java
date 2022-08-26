@@ -24,8 +24,8 @@ public class FetchJson {
             java.net.URL url = new URL(inURL);
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-            conn.setConnectTimeout(15000);
-            conn.setReadTimeout(60000);
+            conn.setConnectTimeout(3000);
+            conn.setReadTimeout(30000);
             conn.setRequestProperty("Accept", "application/json");
             conn.connect();
             String l;

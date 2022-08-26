@@ -21,9 +21,9 @@ public class RandomFurPic extends JRawCommand {
     private static MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
     public static final RandomFurPic INSTANCE = new RandomFurPic();
     public RandomFurPic() {
-        super(FurbotMain.INSTANCE,"random-furpic","来张毛图","来只福瑞");
-        this.setDescription("来随机吸一只毛毛吧~");
-        this.setUsage("来只毛");
+        super(FurbotMain.INSTANCE,"random-furpic","来张毛图","来只福瑞","来只兽");
+        this.setDescription("#随机来一只兽兽~");
+        this.setUsage("(/)来只兽");
         this.setPrefixOptional(true);
     }
     @Override
@@ -43,8 +43,10 @@ public class RandomFurPic extends JRawCommand {
                 .append("&model=").toString();
         //获取查询图片ID信息JSON
         String picJson = FetchJson.fetchJson(picQueryURL);
-        //解码图片ID查询信息JSON获取图片URL
-        String picURL = JsonDecoder.decodePicJson(picJson);
+        //获取图片信息
+        HashMap<String,String> picInfo = JsonDecoder.decodePicJson(picJson);
+        //图片链接
+        String picURL = picInfo.get("url");
         //图片保存的位置
         String savePath = "./data/cn.whitrayhb.furbot/cache/furpic/";
         //拉取图片并返回保存的位置+文件名
@@ -55,12 +57,13 @@ public class RandomFurPic extends JRawCommand {
             ExternalResource resource = ExternalResource.create(file);
             Image image = sender.getSubject().uploadImage(resource);
             MessageChain message = new MessageChainBuilder()
-                    .append("---==每日毛图Bot==---\n")
-                    .append("今天也记得吸毛了呢\n")
-                    .append("毛毛名字:"+info.get("name")+"\n")
-                    .append("毛毛ID: "+info.get("id")+"\n")
+                    .append("---==每日兽图Bot==---\n")
+                    .append("今天也是福瑞控呢\n")
+                    .append("兽兽名字:"+info.get("name")+"\n")
+                    .append("兽兽ID: "+info.get("id")+"\n")
                     .append(image)
-                    .append("咕Bot By WHB").build();
+                    .append("Code By WHB\n")
+                    .append("API By 兽云祭").build();
             sender.sendMessage(message);
             try {
                 resource.close();

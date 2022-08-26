@@ -23,15 +23,14 @@ public class APIInfo extends JRawCommand {
     }
     @Override
     public void onCommand(@NotNull CommandSender sender, @NotNull MessageChain arg){
-        String InfoJson = FetchJson.fetchJson("https://cloud.foxtail.cn/api/information/feedback");
-        HashMap APIInfo = JsonDecoder.decodeAPIInfoJson(InfoJson);
+        HashMap APIInfo = FurbotMain.INSTANCE.apiinfo;
         MessageChain message = new MessageChainBuilder().append("---==API信息==---\n")
                 .append("API:兽云祭\n")
                 .append("图片请求数："+APIInfo.get("queryNum")+"\n")
                 .append("总图片数为："+APIInfo.get("picNum")+"\n")
                 .append("公开图片数为："+APIInfo.get("publicPicNum")+"\n")
                 .append("审核中图片数为："+APIInfo.get("examinePicNum")+"\n")
-                .append("咕Bot By WHB\n")
+                .append("Code By WHB\n")
                 .append("API By 兽云祭")
                 .build();
         sender.sendMessage(message);
