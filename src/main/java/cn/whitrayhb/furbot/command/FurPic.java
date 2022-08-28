@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class FurPic extends JRawCommand {
-    private static MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
+    private static final MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
     public static final FurPic INSTANCE = new FurPic();
     public FurPic() {
         super(FurbotMain.INSTANCE,"fur-pic","来只");
@@ -29,10 +29,10 @@ public class FurPic extends JRawCommand {
     @Override
     public void onCommand(@NotNull CommandSender sender, @NotNull MessageChain arg){
         //从指令中获取名称
-        String name = null;
-        String picQueryURL = null;
+        String name;
+        String picQueryURL;
         String type = null;
-        HashMap<String,String> info = null;
+        HashMap<String,String> info;
         try{
             name = arg.get(0).contentToString();
         }catch (Exception ignored){
@@ -40,7 +40,6 @@ public class FurPic extends JRawCommand {
             return;
         }
         try {type = arg.get(1).contentToString();} catch (Exception ignored) {}
-        
         
         if(name.matches("\\d+")){//如果参数为纯数字则直接作为sid查询
             picQueryURL = new StringBuilder()

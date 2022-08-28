@@ -4,12 +4,13 @@ import cn.whitrayhb.furbot.FurbotMain;
 import com.google.gson.stream.JsonReader;
 import net.mamoe.mirai.utils.MiraiLogger;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class JsonDecoder {
-    private static MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
+    private static final MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
 
     /**
      * 解码查询毛毛的JSON
@@ -31,24 +32,17 @@ public class JsonDecoder {
                     case"picture":{
                         reader.beginObject();
                         while (reader.hasNext()) {
-                            switch (reader.nextName()) {
+                            String nextName = reader.nextName();
+                            switch (nextName) {
                                 case "name":
-                                    map.put("name", reader.nextString());
-                                    break;
                                 case "id":
-                                    map.put("id", reader.nextString());
+                                case "format":
+                                case "suggest":
+                                case"time":
+                                    map.put(nextName, reader.nextString());
                                     break;
                                 case "picture":
                                     map.put("picID", reader.nextString());
-                                    break;
-                                case "format":
-                                    map.put("format", reader.nextString());
-                                    break;
-                                case "suggest":
-                                    map.put("suggest", reader.nextString());
-                                    break;
-                                case"time":
-                                    map.put("time",reader.nextString());
                                     break;
                                 case"timestamp":
                                     map.put("timeStamp",reader.nextString());
@@ -87,24 +81,20 @@ public class JsonDecoder {
      * @return 图片URL
      */
     public static HashMap<String,String> decodePicJson(String picJson){
-        HashMap<String,String> map = new HashMap<String,String>();
+        HashMap<String,String> map = new HashMap<>();
         if(picJson == null) {
             return null;
         }
-        String URL = null;
         try{
             JsonReader reader = new JsonReader(new StringReader(picJson));
             reader.beginObject();
             while (reader.hasNext()){
-                switch (reader.nextName()){
+                String nextName = reader.nextName();
+                switch (nextName){
                     case"url":
-                        map.put("url",reader.nextString());
-                        break;
                     case"id":
-                        map.put("id",reader.nextString());
-                        break;
                     case"name":
-                        map.put("name",reader.nextString());
+                        map.put(nextName,reader.nextString());
                         break;
                     case"msg":
                         logger.info(reader.nextString());
@@ -126,6 +116,7 @@ public class JsonDecoder {
 
     /**
      * 解码API信息JSON
+     * 对应api
      * @param json 输入
      * @return 一个Hashmap，包括 queryNum (图片请求数)和 picNum (总图片数)
      */
@@ -195,11 +186,11 @@ public class JsonDecoder {
     }
 
     /**
-     * 对应pullpic和pulllist
-     * @param json
-     * @return
+     * 对应pull-pic和pull-list
+     * @param json 输入json
+     * @return 一个ArrayList，包含，每个图片的单独信息
      */
-    public static  ArrayList<HashMap<String, String>> decodeListPicQueryJson(String json){
+    public static ArrayList<HashMap<String, String>> decodeListPicQueryJson(String json){
         if(json==null){
             logger.error("获取到的JSON为空");
             return null;
@@ -215,31 +206,24 @@ public class JsonDecoder {
                         reader.beginObject();
                         HashMap<String, String> map = new HashMap<>();
                         while (reader.hasNext()) {
+                            String nextName = reader.nextName();
                             switch (reader.nextName()) {
-                                    case "name":
-                                        map.put("name", reader.nextString());
-                                        break;
-                                    case "id":
-                                        map.put("id", reader.nextString());
-                                        break;
-                                    case "picture":
-                                        map.put("picID", reader.nextString());
-                                        break;
-                                    case "format":
-                                        map.put("format", reader.nextString());
-                                        break;
-                                    case "suggest":
-                                        map.put("suggest", reader.nextString());
-                                        break;
-                                    case "time":
-                                        map.put("time", reader.nextString());
-                                        break;
-                                    case "timestamp":
-                                        map.put("timeStamp", reader.nextString());
-                                        break;
-                                    default:
-                                        reader.skipValue();
-                                        break;
+                                case "name":
+                                case "id":
+                                case "format":
+                                case "suggest":
+                                case "time":
+                                    map.put(nextName,reader.nextString());
+                                    break;
+                                case "picture":
+                                    map.put("picID", reader.nextString());
+                                    break;
+                                case "timestamp":
+                                    map.put("timeStamp", reader.nextString());
+                                    break;
+                                default:
+                                    reader.skipValue();
+                                    break;
                                 }
 
                         }
@@ -263,5 +247,22 @@ public class JsonDecoder {
             logger.error(e);
             return null;
         }
+    }
+    public static HashMap<String,String> decodeAccountActionReturn(String json){
+        if(json == null){
+            return null;
+        }
+        HashMap<String,String> map = new HashMap<>();
+        try{
+            JsonReader reader = new JsonReader(new StringReader(json));
+            reader.beginObject();
+            while (reader.hasNext()){
+                map.put(reader.nextName(),reader.nextString());
+            }
+            reader.endObject();
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        return map;
     }
 }

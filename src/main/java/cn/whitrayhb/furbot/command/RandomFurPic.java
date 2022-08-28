@@ -18,10 +18,10 @@ import java.io.IOException;
 import java.util.HashMap;
 
 public class RandomFurPic extends JRawCommand {
-    private static MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
+    private static final MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
     public static final RandomFurPic INSTANCE = new RandomFurPic();
     public RandomFurPic() {
-        super(FurbotMain.INSTANCE,"random-furpic","来张毛图","来只福瑞","来只兽");
+        super(FurbotMain.INSTANCE,"random-furpic","来张毛图","来只福瑞","来只兽","随机兽图");
         this.setDescription("#随机来一只兽兽~");
         this.setUsage("(/)来只兽");
         this.setPrefixOptional(true);
@@ -32,7 +32,7 @@ public class RandomFurPic extends JRawCommand {
         //拉取随机图片信息JSON
         String randomPicJson = FetchJson.fetchJson(randomPicJsonURL);
         //解码随机图片信息获取图片ID
-        HashMap info = JsonDecoder.decodeQueryJson(randomPicJson);
+        HashMap<String, String> info = JsonDecoder.decodeQueryJson(randomPicJson);
         if(info == null){
             logger.info("Json解析失败！");
         }

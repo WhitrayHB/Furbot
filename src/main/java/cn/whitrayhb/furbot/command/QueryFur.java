@@ -67,7 +67,7 @@ public class QueryFur extends JRawCommand {
                 .append("sid："+info.get("id")+"\n")
                 .append("uid："+info.get("picID")+"\n")
                 .append("格式："+info.get("format")+"\n")
-                .append("时间："+info.get("time")+"\n")
+                //.append("时间："+info.get("time")+"\n")
                 .append("留言："+info.get("suggest")+"\n")
                 .append("Code By WHB\n")
                 .append("API By 兽云祭").build();

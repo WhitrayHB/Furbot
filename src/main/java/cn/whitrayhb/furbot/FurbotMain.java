@@ -3,6 +3,7 @@ package cn.whitrayhb.furbot;
 import cn.whitrayhb.furbot.command.*;
 import cn.whitrayhb.furbot.data.FetchJson;
 import cn.whitrayhb.furbot.data.JsonDecoder;
+import cn.whitrayhb.furbot.data.PluginData;
 import net.mamoe.mirai.console.command.CommandManager;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
@@ -30,6 +31,7 @@ public final class FurbotMain extends JavaPlugin {
         CommandManager.INSTANCE.registerCommand(PostFur.INSTANCE,true);
         CommandManager.INSTANCE.registerCommand(QueryFur.INSTANCE,true);
         refreshAPIInfo();
+        reloadPluginData(PluginData.Cookie.INSTANCE);
         getLogger().info("FurBot插件已加载！");
     }
     public void refreshAPIInfo(){

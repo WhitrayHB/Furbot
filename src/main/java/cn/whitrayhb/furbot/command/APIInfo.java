@@ -1,8 +1,6 @@
 package cn.whitrayhb.furbot.command;
 
 import cn.whitrayhb.furbot.FurbotMain;
-import cn.whitrayhb.furbot.data.FetchJson;
-import cn.whitrayhb.furbot.data.JsonDecoder;
 import net.mamoe.mirai.console.command.CommandSender;
 import net.mamoe.mirai.console.command.java.JRawCommand;
 import net.mamoe.mirai.message.data.MessageChain;
@@ -13,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 
 public class APIInfo extends JRawCommand {
-    private static MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
     public static final APIInfo INSTANCE = new APIInfo();
     private APIInfo() {
         super(FurbotMain.INSTANCE,"api-info","接口信息");
