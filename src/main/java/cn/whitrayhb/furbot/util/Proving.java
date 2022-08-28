@@ -27,7 +27,7 @@ public class Proving {
         EventChannel<Event> eventChannel = GlobalEventChannel.INSTANCE.parentScope(FurbotMain.INSTANCE);
         if (sender instanceof Friend) {
             eventChannel.subscribe(FriendMessageEvent.class, f -> {
-                if(){
+                if(true){
 
                 }
                 return null;
