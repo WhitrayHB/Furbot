@@ -8,5 +8,6 @@ class PluginConfig {
     object Account : AutoSavePluginConfig("Account") {
         var account by value<String>()
         var password by value<String>()
+        var apiToken by value<String>()
     }
 }

@@ -31,14 +31,8 @@ public class PostFur extends JRawCommand {
         if(sender.getSubject()==null){
             sender.sendMessage("请不要在控制台中执行此命令");
         }
-        String[] arrToken = PluginData.Cookie.INSTANCE.getToken().split(";");
-        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
-        Date expire = null;
-        try {expire = sdf.parse(arrToken[2]);} catch (ParseException e) {logger.error("时间转换失败");}
-        if(new Date().compareTo(expire)>=0){
-            sender.sendMessage("登录过期，请使用/api-login重新登录");
-            return;
-        }
-
+        sender.sendMessage(PluginData.Cookie.INSTANCE.getPhpsessionid());
+        sender.sendMessage(PluginData.Cookie.INSTANCE.getToken());
+        sender.sendMessage(PluginData.Cookie.INSTANCE.getUser());
     }
 }

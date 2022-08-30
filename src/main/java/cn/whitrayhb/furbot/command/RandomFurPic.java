@@ -28,6 +28,12 @@ public class RandomFurPic extends JRawCommand {
     }
     @Override
     public void onCommand(@NotNull CommandSender sender, @NotNull MessageChain arg){
+        String model = null;
+        try{model = String.valueOf(arg.get(0));}catch(Exception ignored){}
+        if (Integer.parseInt(model)!=0||Integer.parseInt(model)!=1||Integer.parseInt(model)!=2) {
+            model = null;
+            sender.sendMessage("查询种类不正确……0为设定，1为毛图，2为插画");
+        }
         String randomPicJsonURL = "https://cloud.foxtail.cn/api/function/random?name=&type=";
         //拉取随机图片信息JSON
         String randomPicJson = FetchJson.fetchJson(randomPicJsonURL);
@@ -40,7 +46,8 @@ public class RandomFurPic extends JRawCommand {
         String picQueryURL = new StringBuilder()
                 .append("https://cloud.foxtail.cn/api/function/pictures?picture=")
                 .append(info.get("picID"))
-                .append("&model=").toString();
+                .append("&model=")
+                .append(model).toString();
         //获取查询图片ID信息JSON
         String picJson = FetchJson.fetchJson(picQueryURL);
         //获取图片信息
@@ -56,14 +63,26 @@ public class RandomFurPic extends JRawCommand {
         if(sender.getSubject()!=null) {
             ExternalResource resource = ExternalResource.create(file);
             Image image = sender.getSubject().uploadImage(resource);
-            MessageChain message = new MessageChainBuilder()
-                    .append("---==每日兽图Bot==---\n")
-                    .append("今天也是福瑞控呢\n")
-                    .append("兽兽名字:"+info.get("name")+"\n")
-                    .append("兽兽ID: "+info.get("id")+"\n")
-                    .append(image)
-                    .append("Code By WHB\n")
-                    .append("API By 兽云祭").build();
+            MessageChain message;
+            if(image.getSize()!=0) {
+                message = new MessageChainBuilder()
+                        .append("---==每日兽图Bot==---\n")
+                        .append("今天也是福瑞控呢\n")
+                        .append("兽兽名字:" + info.get("name") + "\n")
+                        .append("兽兽ID: " + info.get("id") + "\n")
+                        .append(image)
+                        .append("Code By WHB\n")
+                        .append("API By 兽云祭").build();
+            }else{
+                message = new MessageChainBuilder()
+                        .append("---==每日兽图Bot==---\n")
+                        .append("今天也是福瑞控呢\n")
+                        .append("兽兽名字:" + info.get("name") + "\n")
+                        .append("兽兽ID: " + info.get("id") + "\n")
+                        .append("*这只兽在路上走丢了……*")
+                        .append("Code By WHB\n")
+                        .append("API By 兽云祭").build();
+            }
             sender.sendMessage(message);
             try {
                 resource.close();

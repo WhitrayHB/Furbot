@@ -87,14 +87,26 @@ public class FurPic extends JRawCommand {
         if(sender.getSubject()!=null) {
             ExternalResource resource = ExternalResource.create(file);
             Image image = sender.getSubject().uploadImage(resource);
-            MessageChain message = new MessageChainBuilder()
-                    .append("---==每日兽图Bot==---\n")
-                    .append("今天也是福瑞控呢\n")
-                    .append("兽兽名字:"+picInfo.get("name")+"\n")
-                    .append("兽兽ID: "+picInfo.get("id")+"\n")
-                    .append(image)
-                    .append("Code By WHB\n")
-                    .append("API By 兽云祭").build();
+            MessageChain message;
+            if(image.getSize()!=0) {
+                message = new MessageChainBuilder()
+                        .append("---==每日兽图Bot==---\n")
+                        .append("今天也是福瑞控呢\n")
+                        .append("兽兽名字:" + picInfo.get("name") + "\n")
+                        .append("兽兽ID: " + picInfo.get("id") + "\n")
+                        .append(image)
+                        .append("Code By WHB\n")
+                        .append("API By 兽云祭").build();
+            }else{
+                message = new MessageChainBuilder()
+                        .append("---==每日兽图Bot==---\n")
+                        .append("今天也是福瑞控呢\n")
+                        .append("兽兽名字:" + picInfo.get("name") + "\n")
+                        .append("兽兽ID: " + picInfo.get("id") + "\n")
+                        .append("*这只兽在路上走丢了……*")
+                        .append("Code By WHB\n")
+                        .append("API By 兽云祭").build();
+            }
             sender.sendMessage(message);
             try {
                 resource.close();

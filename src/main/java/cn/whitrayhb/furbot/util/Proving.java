@@ -16,7 +16,13 @@ import net.mamoe.mirai.utils.ExternalResource;
 import java.io.File;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * 图片验证码模块暂时停止开发
+ * 转而使用唯一Token
+ */
+@Deprecated
 public class Proving {
+
     public static String proving(CommandSender sender) {
         AtomicReference<String> proving = null;
         String provingPicPath = "./data/cn.whitrayhb.furbot/cache/proving/";
