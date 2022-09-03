@@ -16,7 +16,7 @@ import java.util.HashMap;
 public final class FurbotMain extends JavaPlugin {
     public static final FurbotMain INSTANCE = new FurbotMain();
     public String infoJson = null;
-    public HashMap apiinfo = null;
+    public HashMap<String,String> apiinfo = null;
     private FurbotMain() {
         super(new JvmPluginDescriptionBuilder("cn.whitrayhb.furbot", "0.1.0")
                 .info("Furbot")
@@ -27,11 +27,11 @@ public final class FurbotMain extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        CommandManager.INSTANCE.registerCommand(FurPic.INSTANCE,true);
         CommandManager.INSTANCE.registerCommand(RandomFurPic.INSTANCE,true);
+        CommandManager.INSTANCE.registerCommand(FurPic.INSTANCE,true);
         CommandManager.INSTANCE.registerCommand(APIInfo.INSTANCE,true);
-        CommandManager.INSTANCE.registerCommand(PostFur.INSTANCE,true);
         CommandManager.INSTANCE.registerCommand(QueryFur.INSTANCE,true);
+        CommandManager.INSTANCE.registerCommand(PostFur.INSTANCE,true);
         CommandManager.INSTANCE.registerCommand(APILogin.INSTANCE,true);
         refreshAPIInfo();
         configInitialize();

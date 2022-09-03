@@ -60,6 +60,10 @@ public class FurPic extends JRawCommand {
                     .append(type).toString();
             //拉取有图片ID的JSON
             String picQueryJson = FetchJson.fetchJson(picIDQueryURL);
+            if(picQueryJson==null){
+                sender.sendMessage("图片信息拉取失败……");
+                return;
+            }
             //解析JSON获得图片信息
             info = JsonDecoder.decodeQueryJson(picQueryJson);
             if (info == null) {
@@ -75,6 +79,10 @@ public class FurPic extends JRawCommand {
         
         //获取查询图片ID信息JSON
         String picJson = FetchJson.fetchJson(picQueryURL);
+        if(picJson==null){
+            sender.sendMessage("图片信息拉取失败……");
+            return;
+        }
         //获取图片信息
         HashMap<String,String> picInfo = JsonDecoder.decodePicJson(picJson);
         //图片链接
@@ -83,6 +91,10 @@ public class FurPic extends JRawCommand {
         String savePath = "./data/cn.whitrayhb.furbot/cache/furpic/";
         //拉取图片并获取保存位置+图片名
         String picPath = FetchPicture.fetchPicture(picURL,savePath);
+        if(picPath==null){
+            sender.sendMessage("下载图片失败……");
+            return;
+        }
         File file = new File(picPath);
         if(sender.getSubject()!=null) {
             ExternalResource resource = ExternalResource.create(file);

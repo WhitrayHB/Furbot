@@ -163,8 +163,18 @@ public class JsonDecoder {
                         reader.endObject();
                         break;
                     }
+                    case "time":{
+                        reader.beginObject();
+                        reader.skipValue();
+                        map.put("time",reader.nextString());
+                        reader.skipValue();
+                        reader.skipValue();
+                        reader.endObject();
+                        break;
+                    }
                     case"msg":
-                        logger.info(reader.nextString());
+                        logger.info("服务器信息表拉取成功");
+                        reader.skipValue();
                         break;
                     case"code":
                         logger.info("RespondCode is "+reader.nextInt());
@@ -257,7 +267,16 @@ public class JsonDecoder {
             JsonReader reader = new JsonReader(new StringReader(json));
             reader.beginObject();
             while (reader.hasNext()){
-                map.put(reader.nextName(),reader.nextString());
+                switch (reader.nextName()){
+                    case "msg":{
+                        map.put("msg",reader.nextString());
+                        break;
+                    }
+                    case "code":{
+                        map.put("code",reader.nextString());
+                        break;
+                    }
+                }
             }
             reader.endObject();
         } catch (Exception e) {

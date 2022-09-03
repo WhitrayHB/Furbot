@@ -34,7 +34,7 @@ public class FetchPicture {
             File file = new File(path);
             if(!file.exists()) file.mkdirs();
             BufferedInputStream bis = new BufferedInputStream(httpUrl.getInputStream());
-            FileOutputStream fos = new FileOutputStream(path+"/"+name);
+            FileOutputStream fos = new FileOutputStream(path+"\\"+name);
             while ((size = bis.read(bytes)) != -1){
                 fos.write(bytes, 0, size);
             }
@@ -47,6 +47,6 @@ public class FetchPicture {
             return null;
         }
         logger.info("图片下载成功！");
-        return path+"/"+name;
+        return path+"\\"+name;
     }
 }

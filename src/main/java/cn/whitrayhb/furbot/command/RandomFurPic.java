@@ -29,25 +29,49 @@ public class RandomFurPic extends JRawCommand {
     @Override
     public void onCommand(@NotNull CommandSender sender, @NotNull MessageChain arg){
         String model = null;
-        try{model = String.valueOf(arg.get(0));}catch(Exception ignored){}
-        if (Integer.parseInt(model)!=0||Integer.parseInt(model)!=1||Integer.parseInt(model)!=2) {
-            model = null;
-            sender.sendMessage("查询种类不正确……0为设定，1为毛图，2为插画");
-        }
-        String randomPicJsonURL = "https://cloud.foxtail.cn/api/function/random?name=&type=";
-        //拉取随机图片信息JSON
+        try{
+            model = arg.get(0).contentToString();
+            switch (model){
+                case"设定":
+                    model = "0";
+                case"0":
+                    sender.sendMessage("正在查询设定图");
+                    break;
+
+                case"毛图":
+                    model = "1";
+                case"1":
+                    sender.sendMessage("正在查询毛图");
+                    break;
+
+                case"插画":
+                    model = "2";
+                case"2":
+                    sender.sendMessage("正在查询插画");
+                    break;
+
+                default:
+                    sender.sendMessage("查询种类不正确……0为设定，1为毛图，2为插画");
+                    return;
+            }
+        }catch(Exception ignored){}
+        String randomPicJsonURL = "https://cloud.foxtail.cn/api/function/random?name=&type="+model;
+        //拉取随机图片信息JSON（random）
         String randomPicJson = FetchJson.fetchJson(randomPicJsonURL);
+        if(randomPicJson==null){
+            sender.sendMessage("获取图片信息JSON失败");
+            return;
+        }
         //解码随机图片信息获取图片ID
         HashMap<String, String> info = JsonDecoder.decodeQueryJson(randomPicJson);
         if(info == null){
             logger.info("Json解析失败！");
         }
-        //构建查询图片ID信息JSON的URL
+        //构建查询图片ID信息JSON的URL（picture）
         String picQueryURL = new StringBuilder()
                 .append("https://cloud.foxtail.cn/api/function/pictures?picture=")
                 .append(info.get("picID"))
-                .append("&model=")
-                .append(model).toString();
+                .append("&model=").toString();
         //获取查询图片ID信息JSON
         String picJson = FetchJson.fetchJson(picQueryURL);
         //获取图片信息
@@ -58,6 +82,10 @@ public class RandomFurPic extends JRawCommand {
         String savePath = "./data/cn.whitrayhb.furbot/cache/furpic/";
         //拉取图片并返回保存的位置+文件名
         String picPath = FetchPicture.fetchPicture(picURL,savePath);
+        if(picPath==null){
+            sender.sendMessage("图片下载失败……");
+            return;
+        }
         //发送消息
         File file = new File(picPath);
         if(sender.getSubject()!=null) {
@@ -68,8 +96,8 @@ public class RandomFurPic extends JRawCommand {
                 message = new MessageChainBuilder()
                         .append("---==每日兽图Bot==---\n")
                         .append("今天也是福瑞控呢\n")
-                        .append("兽兽名字:" + info.get("name") + "\n")
-                        .append("兽兽ID: " + info.get("id") + "\n")
+                        .append("兽名:" + info.get("name") + "\n")
+                        .append("SID: " + info.get("id") + "\n")
                         .append(image)
                         .append("Code By WHB\n")
                         .append("API By 兽云祭").build();
@@ -77,8 +105,8 @@ public class RandomFurPic extends JRawCommand {
                 message = new MessageChainBuilder()
                         .append("---==每日兽图Bot==---\n")
                         .append("今天也是福瑞控呢\n")
-                        .append("兽兽名字:" + info.get("name") + "\n")
-                        .append("兽兽ID: " + info.get("id") + "\n")
+                        .append("兽名:" + info.get("name") + "\n")
+                        .append("SID: " + info.get("id") + "\n")
                         .append("*这只兽在路上走丢了……*")
                         .append("Code By WHB\n")
                         .append("API By 兽云祭").build();

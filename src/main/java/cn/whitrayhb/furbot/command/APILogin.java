@@ -23,23 +23,23 @@ public class APILogin extends JRawCommand {
     public static final APILogin INSTANCE = new APILogin();
 
     public APILogin() {
-        super(FurbotMain.INSTANCE, "api-login", "登录API");
+        super(FurbotMain.INSTANCE, "api-login", "刷新登录");
         this.setDescription("#登录API");
-        this.setUsage("/api-login");
+        this.setUsage("/刷新登录");
         this.setPrefixOptional(false);
     }
 
     @Override
     public void onCommand(@NotNull CommandSender sender, @NotNull MessageChain arg) {
+        FurbotMain.INSTANCE.reloadPluginConfig(PluginConfig.Account.INSTANCE);
         String account = PluginConfig.Account.INSTANCE.getAccount();
         String password = PluginConfig.Account.INSTANCE.getPassword();
-        //String proving = Proving.proving(sender); :Deprecated
+        //String proving = Proving.proving(sender); @Deprecated
         String apiToken = PluginConfig.Account.INSTANCE.getApiToken();
         if (account.isEmpty() || password.isEmpty() || apiToken.isEmpty()) {
             sender.sendMessage("登录配置不完整啊笨蛋，检查检查config吧");
             return;
         }
-        Response response = null;
         try {//net相关
             OkHttpClient client = new OkHttpClient().newBuilder()
                     .build();
@@ -53,20 +53,18 @@ public class APILogin extends JRawCommand {
                     .url("https://cloud.foxtail.cn/api/account/login")
                     .method("POST", body)
                     .build();
-            response = client.newCall(request).execute();
-            logger.info(response.header("Set-Cookie"));
-            logger.info(response.body().source().readString(StandardCharsets.UTF_8));
+            Response response = client.newCall(request).execute();
 
             //返回值处理
+            if(!response.isSuccessful()){
+                sender.sendMessage("服务器响应咕咕咕了……或许是网络环境的问题？");
+                return;
+            }
             String returnJson = response.body().source().readString(StandardCharsets.UTF_8);
             HashMap<String,String> returnMap = JsonDecoder.decodeAccountActionReturn(returnJson);
             sender.sendMessage(new MessageChainBuilder()
                     .append(returnMap.get("msg")).append("\n返回码为：")
                     .append(returnMap.get("code")).build());
-            if(!response.isSuccessful()){
-                sender.sendMessage("服务器响应咕咕咕了……或许是网络环境的问题？");
-                return;
-            }
             List<String> listCookies = response.headers("Set-Cookie");
             logger.info(listCookies.toString());
             listCookies.forEach((c)->{
