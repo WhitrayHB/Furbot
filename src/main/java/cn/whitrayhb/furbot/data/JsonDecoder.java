@@ -267,16 +267,7 @@ public class JsonDecoder {
             JsonReader reader = new JsonReader(new StringReader(json));
             reader.beginObject();
             while (reader.hasNext()){
-                switch (reader.nextName()){
-                    case "msg":{
-                        map.put("msg",reader.nextString());
-                        break;
-                    }
-                    case "code":{
-                        map.put("code",reader.nextString());
-                        break;
-                    }
-                }
+                map.put(reader.nextName(),reader.nextString());
             }
             reader.endObject();
         } catch (Exception e) {

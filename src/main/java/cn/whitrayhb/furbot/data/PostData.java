@@ -12,8 +12,8 @@ public class PostData {
     private static final MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
     public static String postBackup(UUID uuid, String name, String type, String suggest, Image image, CommandSender sender){
         String url = Image.queryUrl(image);
-        File file = new File(".\\data\\cn.whitrayhb.furbot\\postfur\\"+uuid+"\\");
-        File info = new File(".\\data\\cn.whitrayhb.furbot\\postfur\\"+ uuid +"\\info.yml");
+        File file = new File("./data/cn.whitrayhb.furbot/postfur/"+uuid+"/");
+        File info = new File("./data/cn.whitrayhb.furbot/postfur/"+ uuid +"/info.yml");
         if(!file.exists())file.mkdirs();
         String imagePath = FetchPicture.fetchPicture(url,file.getPath());
         String[] arrImagePath = imagePath.split("/");
@@ -32,8 +32,8 @@ public class PostData {
         logger.info(imagePath);
         try(FileInputStream fis = new FileInputStream(imagePath)) {
             fis.read(b, 0, b.length);
-            String imageType = bytesToHexString(b).toUpperCase();
-            /*if (imageType.contains("FFD8FF")) {
+            /*String imageType = bytesToHexString(b).toUpperCase();
+            if (imageType.contains("FFD8FF")) {
                 imagePath = imagePath + ".jpg";
                 logger.info(imagePath);
                 logger.info(pic.getPath());

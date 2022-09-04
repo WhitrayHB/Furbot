@@ -14,7 +14,7 @@ public class APIInfo extends JRawCommand {
     private APIInfo() {
         super(FurbotMain.INSTANCE,"api-info","接口信息");
         this.setDescription("接口信息");
-        this.setUsage("(/)api-info");
+        this.setUsage("(/)接口信息  #获取接口信息");
         this.setPrefixOptional(true);
     }
     @Override

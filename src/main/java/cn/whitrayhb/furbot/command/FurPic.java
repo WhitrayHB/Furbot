@@ -23,7 +23,7 @@ public class FurPic extends JRawCommand {
     public FurPic() {
         super(FurbotMain.INSTANCE,"fur-pic","来只");
         this.setDescription("#来一只兽兽~");
-        this.setUsage("(/)来只 <兽兽名字>");
+        this.setUsage("(/)来只 <兽兽名字/sid/uid>");
         this.setPrefixOptional(true);
     }
     @Override
@@ -104,8 +104,8 @@ public class FurPic extends JRawCommand {
                 message = new MessageChainBuilder()
                         .append("---==每日兽图Bot==---\n")
                         .append("今天也是福瑞控呢\n")
-                        .append("兽兽名字:" + picInfo.get("name") + "\n")
-                        .append("兽兽ID: " + picInfo.get("id") + "\n")
+                        .append("兽名:" + picInfo.get("name") + "\n")
+                        .append("SID: " + picInfo.get("id") + "\n")
                         .append(image)
                         .append("Code By WHB\n")
                         .append("API By 兽云祭").build();
@@ -113,8 +113,8 @@ public class FurPic extends JRawCommand {
                 message = new MessageChainBuilder()
                         .append("---==每日兽图Bot==---\n")
                         .append("今天也是福瑞控呢\n")
-                        .append("兽兽名字:" + picInfo.get("name") + "\n")
-                        .append("兽兽ID: " + picInfo.get("id") + "\n")
+                        .append("兽名:" + picInfo.get("name") + "\n")
+                        .append("SID: " + picInfo.get("id") + "\n")
                         .append("*这只兽在路上走丢了……*")
                         .append("Code By WHB\n")
                         .append("API By 兽云祭").build();
@@ -130,8 +130,8 @@ public class FurPic extends JRawCommand {
             MessageChain message = new MessageChainBuilder()
                     .append("---==每日兽图Bot==---\n")
                     .append("今天也是福瑞控呢\n")
-                    .append("兽兽名字:"+picInfo.get("name")+"\n")
-                    .append("兽兽ID: "+picInfo.get("id")+"\n")
+                    .append("兽名:"+picInfo.get("name")+"\n")
+                    .append("SID: "+picInfo.get("id")+"\n")
                     .append("咕Bot By WHB\n")
                     .append("API By 兽云祭").build();
             sender.sendMessage(message);

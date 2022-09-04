@@ -16,16 +16,17 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.UUID;
 
 
 public class PostFur extends JRawCommand {
-    private static MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
+    private static final MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
     public static final PostFur INSTANCE = new PostFur();
     private PostFur() {
         super(FurbotMain.INSTANCE,"post-fur","投只兽");
         this.setDescription("#投只兽：上传图片");
-        this.setUsage("(/)投只兽");
+        this.setUsage("(/)投只兽  #投稿图片");
         this.setPrefixOptional(true);
     }
     @Override
@@ -53,7 +54,7 @@ public class PostFur extends JRawCommand {
         }
         name = nameMessage.stream().filter(m->m instanceof PlainText).findFirst().orElse(null).contentToString();
         //类型
-        sender.sendMessage("要投稿图片的类型为？");
+        sender.sendMessage("要投稿图片的类型为？（设定/毛图/插画）");
         MessageChain typeMessage = MessageListener.nextMessage(sender);
         if(typeMessage==null){sender.sendMessage("是还没准备好吗？那稍后准备好以后再重新投稿吧");return;}
         if(typeMessage.stream().filter(m->m instanceof PlainText).findFirst().orElse(null)==null){sender.sendMessage("种类不正确，请重新投稿");return;}
@@ -99,11 +100,12 @@ public class PostFur extends JRawCommand {
                 .append("投稿图片为：\n")
                 .append(image).append("\n")
                 .append("投稿人为："+sender.getUser().getId()+"\n")
-                .append("!!!请输入 确认投稿 以投稿!!!\n")
                 .append("咕Bot By WHB\n")
                 .append("API By 兽云祭").build();
         sender.sendMessage(ensureMessage);
-        if(!MessageListener.nextMessage(sender).stream().filter(m->m instanceof PlainText).findFirst().orElse(null).contentToString().equals("确认投稿")) {
+        sender.sendMessage("!!!请输入 确认投稿 以投稿!!!\n");
+
+        if(!MessageListener.nextMessage(sender).stream().filter(m->m instanceof PlainText).findFirst().orElse(null).contentToString().equals("确认投稿")||MessageListener.nextMessage(sender)==null) {
             sender.sendMessage("投稿已取消");
             return;
         }else{
@@ -112,7 +114,6 @@ public class PostFur extends JRawCommand {
         //信息处理+POST
         if(suggest.equals("无")) suggest = "";
         try{
-            //String imageType = imageFile.getName().split(".")[imageFile.getName().split(".").length-1];
             ImageType imageType = image.getImageType();
             String imageTypeString;
             switch (imageType){
@@ -132,7 +133,7 @@ public class PostFur extends JRawCommand {
                     imageTypeString="apng";
                     break;
                 default:
-                    sender.sendMessage("图片不正确，请重新投稿！");
+                    sender.sendMessage("图片格式不支持，请重新投稿！");
                     return;
             }
             MediaType mediaType = MediaType.parse("image/"+imageTypeString);
@@ -144,27 +145,36 @@ public class PostFur extends JRawCommand {
                     .addFormDataPart("file",imageFile.getName(),imageBody)
                     .addFormDataPart("type",type)
                     .addFormDataPart("suggest", suggest)
-                    .addFormDataPart("power", "1")
+                    .addFormDataPart("power", power)
                     .build();
             String cookie = "Token=" + PluginData.Cookie.INSTANCE.getToken() + ";" +
                     "User=" + PluginData.Cookie.INSTANCE.getUser() + ";" +
                     "PHPSESSID=" + PluginData.Cookie.INSTANCE.getPhpsessionid();
             Request request = new Request.Builder()
                     .url("https://cloud.foxtail.cn/api/function/upload")
-                    .addHeader("cookie",cookie)
+                    .addHeader("Cookie",cookie)
                     .method("POST", body)
                     .build();
             Response response = client.newCall(request).execute();
             String returnJson = response.body().source().readString(StandardCharsets.UTF_8);
-            logger.info(returnJson);
             HashMap<String,String> returnMap = JsonDecoder.decodeAccountActionReturn(returnJson);
-            sender.sendMessage(new MessageChainBuilder()
-                    .append(returnMap.get("msg")).append("\n返回码为：")
-                    .append(returnMap.get("code")).build());
-            sender.sendMessage("投稿已投递！本地图片投稿ID为："+uuid);
+            if(!Objects.equals(returnMap.get("code"), "20000")) {
+                logger.info(returnJson);
+                sender.sendMessage(new MessageChainBuilder()
+                        .append("投稿不成功……\n")
+                        .append(returnMap.get("msg")).append("\n返回码为：")
+                        .append(returnMap.get("code")).build());
+            }else{
+                sender.sendMessage(new MessageChainBuilder()
+                        .append("投稿成功！").append("\n")
+                        .append("投稿SID为：").append(returnMap.get("id")).append("\n")
+                        .append("投稿UID为：").append(returnMap.get("picture")).append("\n")
+                        .append("投稿本地备份号为：").append(String.valueOf(uuid)).append("\n")
+                        .append("咕Bot By WHB\n")
+                        .append("API By 兽云祭").build());
+            }
         }catch (Exception e){
             logger.error(e);
         }
-
     }
 }

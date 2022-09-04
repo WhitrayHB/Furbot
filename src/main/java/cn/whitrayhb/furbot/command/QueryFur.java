@@ -17,9 +17,9 @@ public class QueryFur extends JRawCommand {
     private static MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
     public static final QueryFur INSTANCE = new QueryFur();
     private QueryFur() {
-        super(FurbotMain.INSTANCE,"query-fur","查只兽","查只","查兽图");
+        super(FurbotMain.INSTANCE,"query-fur","查只兽","查兽图");
         this.setDescription("查一只兽兽");
-        this.setUsage("(/)查只兽");
+        this.setUsage("(/)查只兽  #查询图片详细信息");
         this.setPrefixOptional(true);
     }
     @Override

@@ -23,7 +23,7 @@ public class RandomFurPic extends JRawCommand {
     public RandomFurPic() {
         super(FurbotMain.INSTANCE,"random-furpic","来张毛图","来只福瑞","来只兽","随机兽图");
         this.setDescription("#随机来一只兽兽~");
-        this.setUsage("(/)来只兽");
+        this.setUsage("(/)来只兽  #随机来一张兽图");
         this.setPrefixOptional(true);
     }
     @Override
@@ -51,7 +51,7 @@ public class RandomFurPic extends JRawCommand {
                     break;
 
                 default:
-                    sender.sendMessage("查询种类不正确……0为设定，1为毛图，2为插画");
+                    sender.sendMessage("查询种类不正确……（设定/毛图/插画）");
                     return;
             }
         }catch(Exception ignored){}
