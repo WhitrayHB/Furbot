@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class FurPic extends JRawCommand {
     private static final MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
@@ -67,7 +68,7 @@ public class FurPic extends JRawCommand {
             //解析JSON获得图片信息
             info = JsonDecoder.decodeQueryJson(picQueryJson);
             if (info == null) {
-                sender.sendMessage("没有找到这只毛毛……");
+                sender.sendMessage("没有找到这只兽……");
                 return;
             }
             //构建查询图片ID信息JSON的URL
@@ -83,8 +84,14 @@ public class FurPic extends JRawCommand {
             sender.sendMessage("图片信息拉取失败……");
             return;
         }
+        logger.info(picJson);
         //获取图片信息
         HashMap<String,String> picInfo = JsonDecoder.decodePicJson(picJson);
+        if(Objects.equals(picInfo.get("examine"), "3")){
+            sender.sendMessage("没有找到这只兽……");
+            return;
+        }
+        logger.info(picInfo.get("examine"));
         //图片链接
         String picURL = picInfo.get("url");
         //图片保存的位置
@@ -106,6 +113,7 @@ public class FurPic extends JRawCommand {
                         .append("今天也是福瑞控呢\n")
                         .append("兽名:" + picInfo.get("name") + "\n")
                         .append("SID: " + picInfo.get("id") + "\n")
+                        //.append("种类："+picType)
                         .append(image)
                         .append("Code By WHB\n")
                         .append("API By 兽云祭").build();

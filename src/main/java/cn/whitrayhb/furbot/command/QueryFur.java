@@ -12,12 +12,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class QueryFur extends JRawCommand {
     private static MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
     public static final QueryFur INSTANCE = new QueryFur();
     private QueryFur() {
-        super(FurbotMain.INSTANCE,"query-fur","查只兽","查兽图");
+        super(FurbotMain.INSTANCE,"query-fur","查只兽","查兽图","查投稿");
         this.setDescription("查一只兽兽");
         this.setUsage("(/)查只兽  #查询图片详细信息");
         this.setPrefixOptional(true);
@@ -59,8 +60,32 @@ public class QueryFur extends JRawCommand {
         }
         String jinfo = FetchJson.fetchJson(queryURL);
         ArrayList<HashMap<String, String>> arrInfo = JsonDecoder.decodeListPicQueryJson(jinfo);
+        HashMap<String, String> msg = arrInfo.get(1);
+        HashMap<String, String> code = arrInfo.get(2);
+        if(Objects.equals(code.get("code"), "20801")){
+            sender.sendMessage(msg.get("msg"));
+            return;
+        }
         HashMap<String, String> info = arrInfo.get(0);
-        info.putIfAbsent("suggest", "");
+        info.putIfAbsent("suggest", "无");
+        if(info.get("suggest")==""){
+            info.put("suggest","无");
+        }
+        String examineStatus = null;
+        switch(info.get("examine")){
+            case"0":
+                examineStatus = "审核中";
+                break;
+            case"1":
+                examineStatus = "已通过";
+                break;
+            case"2":
+                examineStatus = "被拒绝";
+                break;
+            case"3":
+                examineStatus = "不存在";
+                break;
+        }
         MessageChain message = new MessageChainBuilder()
                 .append("----==兽图信息==----"+"\n")
                 .append("名字："+info.get("name")+"\n")
@@ -69,6 +94,7 @@ public class QueryFur extends JRawCommand {
                 .append("格式："+info.get("format")+"\n")
                 //.append("时间："+info.get("time")+"\n")
                 .append("留言："+info.get("suggest")+"\n")
+                .append("审核状态："+examineStatus+"\n")
                 .append("Code By WHB\n")
                 .append("API By 兽云祭").build();
         sender.sendMessage(message);

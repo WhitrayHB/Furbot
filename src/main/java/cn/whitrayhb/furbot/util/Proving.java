@@ -39,18 +39,6 @@ public class Proving {
                 return null;
             });
         }
-        if (sender instanceof Member) {
-            do {
-                eventChannel.subscribeOnce(GroupMessageEvent.class, g -> {
-                    if (sender.getUser() == g.getSender() || g.getMessage().toString().matches("[a-zA-Z/d]+")) {
-                        proving.set(g.toString());
-                    } else if (g.toString() == "exit") {
-                    } else {
-                        sender.sendMessage("验证码格式不正确，输入exit退出");
-                    }
-                });
-            }while(true);
-        }
         return proving.get();
     }
 }
