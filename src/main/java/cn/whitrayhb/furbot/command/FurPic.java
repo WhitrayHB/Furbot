@@ -4,7 +4,9 @@ import cn.whitrayhb.furbot.FurbotMain;
 import cn.whitrayhb.furbot.data.FetchJson;
 import cn.whitrayhb.furbot.data.FetchPicture;
 import cn.whitrayhb.furbot.data.JsonDecoder;
+import cn.whitrayhb.furbot.util.Cooler;
 import net.mamoe.mirai.console.command.CommandSender;
+import net.mamoe.mirai.console.command.ConsoleCommandSender;
 import net.mamoe.mirai.console.command.java.JRawCommand;
 import net.mamoe.mirai.message.data.Image;
 import net.mamoe.mirai.message.data.MessageChain;
@@ -29,6 +31,13 @@ public class FurPic extends JRawCommand {
     }
     @Override
     public void onCommand(@NotNull CommandSender sender, @NotNull MessageChain arg){
+        if(!(sender instanceof ConsoleCommandSender)){
+            if (Cooler.isLocked(Objects.requireNonNull(sender.getUser()).getId())) {
+                sender.sendMessage("操作太快了，请稍后再试");
+                return;
+            }
+            Cooler.lock(sender.getUser().getId(), 120);
+        }
         //从指令中获取名称
         String name;
         String picQueryURL;
@@ -72,26 +81,20 @@ public class FurPic extends JRawCommand {
                 return;
             }
             //构建查询图片ID信息JSON的URL
-            picQueryURL = new StringBuilder()
-                    .append("https://cloud.foxtail.cn/api/function/pictures?picture=")
-                    .append(info.get("picID"))
-                    .append("&model=").toString();
+            picQueryURL = "https://cloud.foxtail.cn/api/function/pictures?picture=" + info.get("picID") + "&model=";
         }
-        
         //获取查询图片ID信息JSON
         String picJson = FetchJson.fetchJson(picQueryURL);
         if(picJson==null){
             sender.sendMessage("图片信息拉取失败……");
             return;
         }
-        logger.info(picJson);
         //获取图片信息
         HashMap<String,String> picInfo = JsonDecoder.decodePicJson(picJson);
         if(Objects.equals(picInfo.get("examine"), "3")){
-            sender.sendMessage("没有找到这只兽……");
+            sender.sendMessage("没有找到这只兽……或许可以使用“投只兽”来投稿");
             return;
         }
-        logger.info(picInfo.get("examine"));
         //图片链接
         String picURL = picInfo.get("url");
         //图片保存的位置
@@ -111,23 +114,14 @@ public class FurPic extends JRawCommand {
                 message = new MessageChainBuilder()
                         .append("---==每日兽图Bot==---\n")
                         .append("今天也是福瑞控呢\n")
-                        .append("兽名:" + picInfo.get("name") + "\n")
-                        .append("SID: " + picInfo.get("id") + "\n")
+                        .append("兽名:").append(picInfo.get("name")).append("\n")
+                        .append("SID: ").append(picInfo.get("id")).append("\n")
                         //.append("种类："+picType)
                         .append(image)
                         .append("Code By WHB\n")
                         .append("API By 兽云祭").build();
-            }else{
-                message = new MessageChainBuilder()
-                        .append("---==每日兽图Bot==---\n")
-                        .append("今天也是福瑞控呢\n")
-                        .append("兽名:" + picInfo.get("name") + "\n")
-                        .append("SID: " + picInfo.get("id") + "\n")
-                        .append("*这只兽在路上走丢了……*")
-                        .append("Code By WHB\n")
-                        .append("API By 兽云祭").build();
+                sender.sendMessage(message);
             }
-            sender.sendMessage(message);
             try {
                 resource.close();
             } catch (IOException e) {
@@ -138,8 +132,8 @@ public class FurPic extends JRawCommand {
             MessageChain message = new MessageChainBuilder()
                     .append("---==每日兽图Bot==---\n")
                     .append("今天也是福瑞控呢\n")
-                    .append("兽名:"+picInfo.get("name")+"\n")
-                    .append("SID: "+picInfo.get("id")+"\n")
+                    .append("兽名:").append(picInfo.get("name")).append("\n")
+                    .append("SID: ").append(picInfo.get("id")).append("\n")
                     .append("咕Bot By WHB\n")
                     .append("API By 兽云祭").build();
             sender.sendMessage(message);

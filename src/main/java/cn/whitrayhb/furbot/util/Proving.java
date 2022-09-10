@@ -20,7 +20,6 @@ import java.util.concurrent.atomic.AtomicReference;
  * 图片验证码模块暂时停止开发
  * 转而使用唯一Token
  */
-@Deprecated
 public class Proving {
 
     public static String proving(CommandSender sender) {
