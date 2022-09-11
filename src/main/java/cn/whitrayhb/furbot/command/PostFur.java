@@ -1,6 +1,7 @@
 package cn.whitrayhb.furbot.command;
 
 import cn.whitrayhb.furbot.FurbotMain;
+import cn.whitrayhb.furbot.config.PluginConfig;
 import cn.whitrayhb.furbot.data.JsonDecoder;
 import cn.whitrayhb.furbot.data.PluginData;
 import cn.whitrayhb.furbot.data.PostData;
@@ -17,6 +18,8 @@ import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Objects;
@@ -40,8 +43,8 @@ public class PostFur extends JRawCommand {
             sender.sendMessage("操作太快了，请稍后再试");
             return;
         }
-        Cooler.lock(sender.getUser().getId(), 300);
-        if(sender.getSubject()!=null) Cooler.lock(sender.getSubject().getId(),300);
+        Cooler.lock(sender.getUser().getId(), PluginConfig.CoolDown.INSTANCE.getPostFurCD());
+        if(sender.getSubject()!=null) Cooler.lock(sender.getSubject().getId(),PluginConfig.CoolDown.INSTANCE.getPostFurCD());
         if(PluginData.Cookie.INSTANCE.getToken().isEmpty()){
             sender.sendMessage("请使用 /刷新登录 登录API");
             return;
@@ -130,7 +133,6 @@ public class PostFur extends JRawCommand {
         try{//Todo 提前此部分
             ImageType imageType = image.getImageType();
             String imageTypeString;
-            sender.sendMessage(imageType.toString());
             switch (imageType){
                 case JPG:
                     imageTypeString="jpg";
@@ -146,6 +148,9 @@ public class PostFur extends JRawCommand {
                     break;
                 case APNG:
                     imageTypeString="apng";
+                    break;
+                case UNKNOWN:
+                    imageTypeString=getPicType(new FileInputStream(imageFile));
                     break;
                 default:
                     sender.sendMessage("图片格式不支持，请重新投稿！");
@@ -193,5 +198,54 @@ public class PostFur extends JRawCommand {
         }catch (Exception e){
             logger.error(e);
         }
+    }
+    public static String bytesToHexString(byte[] src) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (src == null || src.length <= 0) {
+            return null;
+        }
+        for (int i = 0; i < src.length; i++) {
+            int v = src[i] & 0xFF;
+            String hv = Integer.toHexString(v);
+            if (hv.length() < 2) {
+                stringBuilder.append(0);
+            }
+            stringBuilder.append(hv);
+        }
+        return stringBuilder.toString();
+    }
+    public static String getPicType(FileInputStream fis) {
+        //读取文件的前几个字节来判断图片格式
+        byte[] b = new byte[4];
+        try {
+            fis.read(b, 0, b.length);
+            String type = bytesToHexString(b).toUpperCase();
+            if (type.contains("FFD8FF")) {
+                return "jpg";
+            } else if (type.contains("89504E47")) {
+                return "png";
+            } else if (type.contains("47494638")) {
+                return "gif";
+            } else if (type.contains("424D")) {
+                return "bmp";
+            } else if (type.contains("52494646")) {
+                return "webp";
+            } else if (type.contains("49492A00")) {
+                return "tif";
+            } else {
+                return "jpg";
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
     }
 }

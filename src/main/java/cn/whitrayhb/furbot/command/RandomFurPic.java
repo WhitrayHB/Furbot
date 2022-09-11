@@ -1,6 +1,7 @@
 package cn.whitrayhb.furbot.command;
 
 import cn.whitrayhb.furbot.FurbotMain;
+import cn.whitrayhb.furbot.config.PluginConfig;
 import cn.whitrayhb.furbot.data.FetchJson;
 import cn.whitrayhb.furbot.data.FetchPicture;
 import cn.whitrayhb.furbot.data.JsonDecoder;
@@ -36,7 +37,7 @@ public class RandomFurPic extends JRawCommand {
                 sender.sendMessage("操作太快了，请稍后再试");
                 return;
             }
-            Cooler.lock(sender.getUser().getId(), 120);
+            Cooler.lock(sender.getUser().getId(), PluginConfig.CoolDown.INSTANCE.getRandomFurpicCD());
         }
         String model = null;
         try{

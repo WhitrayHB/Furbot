@@ -3,8 +3,9 @@ package cn.whitrayhb.furbot.util;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Cooler {
-    private static final ConcurrentHashSet<Long> set = new ConcurrentHashSet<Long>();
+    private static final ConcurrentHashSet<Long> set = new ConcurrentHashSet<>();
     public static void lock(long id,int second){
+        if(second<=0) return;
         set.add(id);
         Thread unlockThread = new Thread(() ->{
             try {
@@ -27,7 +28,7 @@ public class Cooler {
 class ConcurrentHashSet<T>{
     private final ConcurrentHashMap<T, Integer> map;
     ConcurrentHashSet(){
-        map = new ConcurrentHashMap<T,Integer>();
+        map = new ConcurrentHashMap<>();
     }
     public void add(T value){
         map.put(value,1);
@@ -37,9 +38,6 @@ class ConcurrentHashSet<T>{
     }
     public Boolean contains(T value){
         return map.containsKey(value);
-    }
-    public String mapReturn(){
-        return String.valueOf(map);
     }
 }
 

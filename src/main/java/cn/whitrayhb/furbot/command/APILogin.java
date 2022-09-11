@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 public class APILogin extends JRawCommand {
@@ -34,7 +33,7 @@ public class APILogin extends JRawCommand {
         FurbotMain.INSTANCE.reloadPluginConfig(PluginConfig.Account.INSTANCE);
         String account = PluginConfig.Account.INSTANCE.getAccount();
         String password = PluginConfig.Account.INSTANCE.getPassword();
-        //String proving = Proving.proving(sender); @Deprecated
+        //String proving = Proving.proving(sender);
         String apiToken = PluginConfig.Account.INSTANCE.getApiToken();
         if (account.isEmpty() || password.isEmpty() || apiToken.isEmpty()) {
             sender.sendMessage("登录配置不完整啊笨蛋，检查检查config吧");
@@ -69,8 +68,8 @@ public class APILogin extends JRawCommand {
             logger.info(listCookies.toString());
             listCookies.forEach((c)->{
                 if(c.startsWith("PHPSESSID")){
-                    String[] arrSess = c.split(";");
-                    PluginData.Cookie.INSTANCE.setPhpsessionid(arrSess[0].split("=")[1]);
+                    String[] arrSession = c.split(";");
+                    PluginData.Cookie.INSTANCE.setPhpsessionid(arrSession[0].split("=")[1]);
                 }
                 if(c.startsWith("Token")){
                     String[] arrToken = c.split(";");
