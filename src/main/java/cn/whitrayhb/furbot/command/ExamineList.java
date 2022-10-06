@@ -11,12 +11,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.ConcurrentHashMap;
 
 /*Todo*/
-public class ExamineList extends JRawCommand {
+public class ExamineList extends CommandBase {
 
     public static final ExamineList INSTANCE = new ExamineList();
-    private static final MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
     private ExamineList() {
-        super(FurbotMain.INSTANCE,"examine-list","审核列表");
+        super("examine-list", new String[]{"审核列表"});
         this.setDescription("审核列表");
         this.setUsage("/审核列表  #获取审核列表");
         this.setPrefixOptional(false);

@@ -1,13 +1,11 @@
 package cn.whitrayhb.furbot.command;
 
-import cn.whitrayhb.furbot.FurbotMain;
 import cn.whitrayhb.furbot.config.PluginConfig;
 import cn.whitrayhb.furbot.data.FetchJson;
 import cn.whitrayhb.furbot.data.JsonDecoder;
 import cn.whitrayhb.furbot.util.Cooler;
 import net.mamoe.mirai.console.command.CommandSender;
 import net.mamoe.mirai.console.command.ConsoleCommandSender;
-import net.mamoe.mirai.console.command.java.JRawCommand;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import org.jetbrains.annotations.NotNull;
@@ -16,10 +14,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class QueryFur extends JRawCommand {
+public class QueryFur extends CommandBase {
     public static final QueryFur INSTANCE = new QueryFur();
     private QueryFur() {
-        super(FurbotMain.INSTANCE,"query-fur","查只兽","查兽图","查投稿");
+        super("query-fur",new String[]{"查只兽","查兽图","查投稿"});
         this.setDescription("查一只兽兽");
         this.setUsage("(/)查只兽  #查询图片详细信息");
         this.setPrefixOptional(true);

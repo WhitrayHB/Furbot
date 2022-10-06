@@ -21,11 +21,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class RandomFurPic extends JRawCommand {
-    private static final MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
+public class RandomFurPic extends CommandBase {
     public static final RandomFurPic INSTANCE = new RandomFurPic();
     public RandomFurPic() {
-        super(FurbotMain.INSTANCE,"random-furpic","来张毛图","来只福瑞","来只兽","随机兽图");
+        super("random-furpic", new String[]{"来张毛图", "来只福瑞", "来只兽", "随机兽图"});
         this.setDescription("#随机来一只兽兽~");
         this.setUsage("(/)来只兽  #随机来一张兽图");
         this.setPrefixOptional(true);
@@ -48,19 +47,16 @@ public class RandomFurPic extends JRawCommand {
                 case"0":
                     sender.sendMessage("正在查询设定图");
                     break;
-
                 case"毛图":
                     model = "1";
                 case"1":
                     sender.sendMessage("正在查询毛图");
                     break;
-
                 case"插画":
                     model = "2";
                 case"2":
                     sender.sendMessage("正在查询插画");
                     break;
-
                 default:
                     sender.sendMessage("查询种类不正确……（设定/毛图/插画）");
                     return;

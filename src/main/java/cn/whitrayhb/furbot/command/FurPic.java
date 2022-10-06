@@ -21,11 +21,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class FurPic extends JRawCommand {
+public class FurPic extends CommandBase {
     private static final MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
     public static final FurPic INSTANCE = new FurPic();
     public FurPic() {
-        super(FurbotMain.INSTANCE,"fur-pic","来只");
+        super("fur-pic",new String[]{"来只"});
         this.setDescription("#来一只兽兽~");
         this.setUsage("(/)来只 <兽兽名字/sid/uid>");
         this.setPrefixOptional(true);
@@ -53,22 +53,12 @@ public class FurPic extends JRawCommand {
         try {type = arg.get(1).contentToString();} catch (Exception ignored) {}
         
         if(name.matches("\\d+")){//如果参数为纯数字则直接作为sid查询
-            picQueryURL = new StringBuilder()
-                    .append("https://cloud.foxtail.cn/api/function/pictures?picture=")
-                    .append(name)
-                    .append("&model=1").toString();
+            picQueryURL = "https://cloud.foxtail.cn/api/function/pictures?picture=" + name + "&model=1";
         } else if (name.matches("[A-Za-z\\d]+-[A-Za-z\\d]+-[A-Za-z\\d]+-[A-Za-z\\d]+")) {
-            picQueryURL = new StringBuilder()
-                    .append("https://cloud.foxtail.cn/api/function/pictures?picture=")
-                    .append(name)
-                    .append("&model=0").toString();
+            picQueryURL = "https://cloud.foxtail.cn/api/function/pictures?picture=" + name + "&model=0";
         } else{//如果参数不为纯数字则作为名字查询
             //构建查询URL
-            String picIDQueryURL = new StringBuilder()
-                    .append("https://cloud.foxtail.cn/api/function/random?name=")
-                    .append(name)
-                    .append("&type=")
-                    .append(type).toString();
+            String picIDQueryURL = "https://cloud.foxtail.cn/api/function/random?name=" + name + "&type=" + type;
             //拉取有图片ID的JSON
             String picQueryJson = FetchJson.fetchJson(picIDQueryURL);
             if(picQueryJson==null){

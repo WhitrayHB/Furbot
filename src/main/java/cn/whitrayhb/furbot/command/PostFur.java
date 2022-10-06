@@ -1,6 +1,5 @@
 package cn.whitrayhb.furbot.command;
 
-import cn.whitrayhb.furbot.FurbotMain;
 import cn.whitrayhb.furbot.config.PluginConfig;
 import cn.whitrayhb.furbot.data.JsonDecoder;
 import cn.whitrayhb.furbot.data.PluginData;
@@ -9,11 +8,9 @@ import cn.whitrayhb.furbot.util.Cooler;
 import cn.whitrayhb.furbot.util.MessageListener;
 import net.mamoe.mirai.console.command.CommandSender;
 import net.mamoe.mirai.console.command.ConsoleCommandSender;
-import net.mamoe.mirai.console.command.java.JRawCommand;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.data.*;
 import net.mamoe.mirai.utils.ExternalResource;
-import net.mamoe.mirai.utils.MiraiLogger;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,11 +23,10 @@ import java.util.Objects;
 import java.util.UUID;
 
 
-public class PostFur extends JRawCommand {
-    private static final MiraiLogger logger = FurbotMain.INSTANCE.getLogger();
+public class PostFur extends CommandBase {
     public static final PostFur INSTANCE = new PostFur();
     private PostFur() {
-        super(FurbotMain.INSTANCE,"post-fur","投只兽");
+        super("post-fur",new String[]{"投只兽"});
         this.setDescription("#投只兽：上传图片");
         this.setUsage("(/)投只兽  #投稿图片");
         this.setPrefixOptional(true);
@@ -56,7 +52,7 @@ public class PostFur extends JRawCommand {
         Image image;
         MessageListener messageListener = new MessageListener();
         //名字
-        if(sender.getSubject() instanceof Group)sender.sendMessage("要投稿的这只兽的名字是？（群聊内投稿限制两分钟一次，推荐私聊投稿）");
+        if(sender.getSubject() instanceof Group)sender.sendMessage("要投稿的这只兽的名字是？（群聊内投稿限制五分钟一次，推荐私聊投稿）");
         else sender.sendMessage("要投稿的这只兽的名字是？");
         MessageChain nameMessage = messageListener.nextMessage(sender,30000);
         if(nameMessage==null){sender.sendMessage("是还没准备好吗？那稍后准备好以后再重新投稿吧");return;}
@@ -179,6 +175,12 @@ public class PostFur extends JRawCommand {
             Response response = client.newCall(request).execute();
             String returnJson = response.body().source().readString(StandardCharsets.UTF_8);
             HashMap<String,String> returnMap = JsonDecoder.decodeAccountActionReturn(returnJson);
+            if(Objects.equals(returnMap.get("code"), "11101")){
+                APILogin.INSTANCE.onCommand(sender,new MessageChainBuilder().build());
+                response = client.newCall(request).execute();
+                response.body().source().readString(StandardCharsets.UTF_8);
+                returnMap = JsonDecoder.decodeAccountActionReturn(returnJson);
+            }
             if(!Objects.equals(returnMap.get("code"), "20000")) {
                 logger.info(returnJson);
                 sender.sendMessage(new MessageChainBuilder()
@@ -191,6 +193,7 @@ public class PostFur extends JRawCommand {
                         .append("投稿SID为：").append(returnMap.get("id")).append("\n")
                         .append("投稿UID为：").append(returnMap.get("picture")).append("\n")
                         .append("投稿本地备份号为：").append(String.valueOf(uuid)).append("\n")
+                        .append("投稿已进入审核状态，请稍等\n")
                         .append("使用 查投稿 <SID/UID> 查询投稿情况\n")
                         .append("Code By WHB\n")
                         .append("API By 兽云祭").build());
@@ -201,11 +204,11 @@ public class PostFur extends JRawCommand {
     }
     public static String bytesToHexString(byte[] src) {
         StringBuilder stringBuilder = new StringBuilder();
-        if (src == null || src.length <= 0) {
+        if (src == null || src.length == 0) {
             return null;
         }
-        for (int i = 0; i < src.length; i++) {
-            int v = src[i] & 0xFF;
+        for (byte b : src) {
+            int v = b & 0xFF;
             String hv = Integer.toHexString(v);
             if (hv.length() < 2) {
                 stringBuilder.append(0);

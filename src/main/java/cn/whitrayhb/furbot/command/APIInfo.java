@@ -29,7 +29,6 @@ public class APIInfo extends JRawCommand {
                 .append("公开图片数为：").append(apiInfo.get("publicPicNum")).append("\n")
                 .append("审核中图片数为：").append(apiInfo.get("examinePicNum")).append("\n")
                 .append("API连续运行时长为：").append(apiInfo.get("time")).append("天\n")
-                .append("Code By WhitrayHB")
                 .build();
         sender.sendMessage(message);
     }
