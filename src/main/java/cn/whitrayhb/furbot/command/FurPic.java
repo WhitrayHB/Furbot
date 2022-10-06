@@ -107,6 +107,7 @@ public class FurPic extends CommandBase {
                         .append("今天也是福瑞控呢\n")
                         .append("兽名:").append(picInfo.get("name")).append("\n")
                         .append("SID: ").append(picInfo.get("id")).append("\n")
+                        .append("留言：").append(picInfo.get("suggest")).append("\n")
                         //.append("种类："+picType)
                         .append(image)
                         .append("Code By WHB\n")
@@ -125,6 +126,7 @@ public class FurPic extends CommandBase {
                     .append("今天也是福瑞控呢\n")
                     .append("兽名:").append(picInfo.get("name")).append("\n")
                     .append("SID: ").append(picInfo.get("id")).append("\n")
+                    .append("留言：").append(picInfo.get("suggest")).append("\n")
                     .append("咕Bot By WHB\n")
                     .append("API By 兽云祭").build();
             sender.sendMessage(message);

@@ -100,6 +100,7 @@ public class JsonDecoder {
                     case"examine":
                         map.put(nextName,String.valueOf(reader.nextInt()));
                         break;
+                    case"suggest":
                     case"url":
                     case"name":
                         map.put(nextName,reader.nextString());
