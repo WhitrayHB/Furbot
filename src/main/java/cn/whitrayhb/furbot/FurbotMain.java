@@ -6,11 +6,9 @@ import cn.whitrayhb.furbot.data.FetchJson;
 import cn.whitrayhb.furbot.data.JsonDecoder;
 import cn.whitrayhb.furbot.data.PluginData;
 import net.mamoe.mirai.console.command.CommandManager;
-import net.mamoe.mirai.console.data.PluginDataStorage;
 import net.mamoe.mirai.console.plugin.jvm.JavaPlugin;
 import net.mamoe.mirai.console.plugin.jvm.JvmPluginDescriptionBuilder;
 
-import javax.sound.sampled.Line;
 import java.util.HashMap;
 
 public final class FurbotMain extends JavaPlugin {
@@ -33,9 +31,10 @@ public final class FurbotMain extends JavaPlugin {
         CommandManager.INSTANCE.registerCommand(QueryFur.INSTANCE,true);
         CommandManager.INSTANCE.registerCommand(PostFur.INSTANCE,true);
         CommandManager.INSTANCE.registerCommand(APILogin.INSTANCE,true);
+        CommandManager.INSTANCE.registerCommand(ExamineList.INSTANCE,true);
+        CommandManager.INSTANCE.registerCommand(PicEdit.INSTANCE, true);
         refreshAPIInfo();
         configInitialize();
-
         getLogger().info("FurBot插件已加载！");
     }
     public void refreshAPIInfo(){

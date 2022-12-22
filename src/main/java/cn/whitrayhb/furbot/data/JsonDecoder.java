@@ -4,7 +4,6 @@ import cn.whitrayhb.furbot.FurbotMain;
 import com.google.gson.stream.JsonReader;
 import net.mamoe.mirai.utils.MiraiLogger;
 
-import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,10 +55,14 @@ public class JsonDecoder {
                         break;
                     }
                     case"msg":
-                        logger.info(reader.nextString());
+                        String msg = reader.nextString();
+                        map.put("msg",msg);
+                        logger.info(msg);
                         break;
                     case"code":
-                        logger.info("RespondCode is "+reader.nextInt());
+                        int code = reader.nextInt();
+                        map.put("msg",String.valueOf(code));
+                        logger.info("RespondCode is "+code);
                         break;
                 }
             }
@@ -91,8 +94,14 @@ public class JsonDecoder {
             while (reader.hasNext()){
                 String nextName = reader.nextName();
                 switch (nextName){
+                    case "id":
+                        try{map.put(nextName,reader.nextString());}catch (Exception ignored){reader.skipValue();}
+                        break;
+                    case"examine":
+                        map.put(nextName,String.valueOf(reader.nextInt()));
+                        break;
+                    case"suggest":
                     case"url":
-                    case"id":
                     case"name":
                         map.put(nextName,reader.nextString());
                         break;
@@ -210,20 +219,24 @@ public class JsonDecoder {
             JsonReader reader = new JsonReader(new StringReader(json));
             reader.beginObject();
             while(reader.hasNext()){
-                switch (reader.nextName()){
+                String nextName = reader.nextName();
+                switch (nextName){
                     case"picture":{
                         reader.beginArray();
-                        reader.beginObject();
                         HashMap<String, String> map = new HashMap<>();
+                        reader.beginObject();
                         while (reader.hasNext()) {
-                            String nextName = reader.nextName();
-                            switch (reader.nextName()) {
-                                case "name":
+                            String nextName1 = reader.nextName();
+                            switch (nextName1) {
                                 case "id":
+                                    try{map.put(nextName1,reader.nextString());}catch (Exception ignored){}
+                                    break;
+                                case "name":
                                 case "format":
                                 case "suggest":
                                 case "time":
-                                    map.put(nextName,reader.nextString());
+                                case "examine":
+                                    map.put(nextName1,reader.nextString());
                                     break;
                                 case "picture":
                                     map.put("picID", reader.nextString());
@@ -234,8 +247,7 @@ public class JsonDecoder {
                                 default:
                                     reader.skipValue();
                                     break;
-                                }
-
+                            }
                         }
                         maps.add(map);
                         reader.endObject();
@@ -243,15 +255,26 @@ public class JsonDecoder {
                         break;
                     }
                     case"msg":
-                        logger.info(reader.nextString());
+                        HashMap<String, String> msg = new HashMap<>();
+                        msg.put(nextName,reader.nextString());
+                        maps.add(msg);
+                        logger.info(msg.get("msg"));
                         break;
                     case"code":
-                        logger.info("RespondCode is "+reader.nextInt());
+                        HashMap<String, String> code = new HashMap<>();
+                        code.put(nextName,reader.nextString());
+                        maps.add(code);
+                        logger.info(code.get("code"));
                         break;
                     default:reader.skipValue();
                 }
             }
             reader.endObject();
+            if(maps.size()==2){
+                HashMap<String,String> nul = new HashMap();
+                nul.put("null","null");
+                maps.add(0,nul);
+            }
             return maps;
         }catch(Exception e){
             logger.error(e);

@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 
 public class APILogin extends JRawCommand {
@@ -34,7 +33,7 @@ public class APILogin extends JRawCommand {
         FurbotMain.INSTANCE.reloadPluginConfig(PluginConfig.Account.INSTANCE);
         String account = PluginConfig.Account.INSTANCE.getAccount();
         String password = PluginConfig.Account.INSTANCE.getPassword();
-        //String proving = Proving.proving(sender); @Deprecated
+        //String proving = Proving.proving(sender);
         String apiToken = PluginConfig.Account.INSTANCE.getApiToken();
         if (account.isEmpty() || password.isEmpty() || apiToken.isEmpty()) {
             sender.sendMessage("登录配置不完整啊笨蛋，检查检查config吧");
@@ -44,9 +43,9 @@ public class APILogin extends JRawCommand {
             OkHttpClient client = new OkHttpClient().newBuilder()
                     .build();
             RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                    .addFormDataPart("account", "WhitrayHB")
-                    .addFormDataPart("password", "Zhou614199")
-                    .addFormDataPart("token", "X2mYcLtHCWGAuMKzZlpU0bqfQvSoDVhn")
+                    .addFormDataPart("account", PluginConfig.Account.INSTANCE.getAccount())
+                    .addFormDataPart("password", PluginConfig.Account.INSTANCE.getPassword())
+                    .addFormDataPart("token", PluginConfig.Account.INSTANCE.getApiToken())
                     .addFormDataPart("model", "1")
                     .build();
             Request request = new Request.Builder()
@@ -62,15 +61,14 @@ public class APILogin extends JRawCommand {
             }
             String returnJson = response.body().source().readString(StandardCharsets.UTF_8);
             HashMap<String,String> returnMap = JsonDecoder.decodeAccountActionReturn(returnJson);
-            sender.sendMessage(new MessageChainBuilder()
-                    .append(returnMap.get("msg")).append("\n返回码为：")
-                    .append(returnMap.get("code")).build());
+            logger.info(returnMap.get("msg"));
+            logger.info("返回码为："+returnMap.get("code"));
             List<String> listCookies = response.headers("Set-Cookie");
             logger.info(listCookies.toString());
             listCookies.forEach((c)->{
                 if(c.startsWith("PHPSESSID")){
-                    String[] arrSess = c.split(";");
-                    PluginData.Cookie.INSTANCE.setPhpsessionid(arrSess[0].split("=")[1]);
+                    String[] arrSession = c.split(";");
+                    PluginData.Cookie.INSTANCE.setPhpsessionid(arrSession[0].split("=")[1]);
                 }
                 if(c.startsWith("Token")){
                     String[] arrToken = c.split(";");

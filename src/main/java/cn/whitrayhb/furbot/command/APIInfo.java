@@ -21,14 +21,14 @@ public class APIInfo extends JRawCommand {
     public void onCommand(@NotNull CommandSender sender, @NotNull MessageChain arg){
         FurbotMain.INSTANCE.refreshAPIInfo();
         HashMap<String,String> apiInfo = FurbotMain.INSTANCE.apiinfo;
-        MessageChain message = new MessageChainBuilder().append("---==API信息==---\n")
+        MessageChain message = new MessageChainBuilder()
+                .append("---==API信息==---\n")
                 .append("API:兽云祭\n")
-                .append("图片请求数："+apiInfo.get("queryNum")+"\n")
-                .append("总图片数为："+apiInfo.get("picNum")+"\n")
-                .append("公开图片数为："+apiInfo.get("publicPicNum")+"\n")
-                .append("审核中图片数为："+apiInfo.get("examinePicNum")+"\n")
-                .append("API连续运行时长为："+apiInfo.get("time")+"天\n")
-                .append("Code By WhitrayHB\n")
+                .append("图片请求数：").append(apiInfo.get("queryNum")).append("\n")
+                .append("总图片数为：").append(apiInfo.get("picNum")).append("\n")
+                .append("公开图片数为：").append(apiInfo.get("publicPicNum")).append("\n")
+                .append("审核中图片数为：").append(apiInfo.get("examinePicNum")).append("\n")
+                .append("API连续运行时长为：").append(apiInfo.get("time")).append("天\n")
                 .build();
         sender.sendMessage(message);
     }
