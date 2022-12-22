@@ -32,6 +32,7 @@ public final class FurbotMain extends JavaPlugin {
         CommandManager.INSTANCE.registerCommand(PostFur.INSTANCE,true);
         CommandManager.INSTANCE.registerCommand(APILogin.INSTANCE,true);
         CommandManager.INSTANCE.registerCommand(ExamineList.INSTANCE,true);
+        CommandManager.INSTANCE.registerCommand(PicEdit.INSTANCE, true);
         refreshAPIInfo();
         configInitialize();
         getLogger().info("FurBot插件已加载！");

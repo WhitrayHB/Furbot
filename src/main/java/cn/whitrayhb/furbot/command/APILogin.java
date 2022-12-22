@@ -43,9 +43,9 @@ public class APILogin extends JRawCommand {
             OkHttpClient client = new OkHttpClient().newBuilder()
                     .build();
             RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                    .addFormDataPart("account", "WhitrayHB")
-                    .addFormDataPart("password", "Zhou614199")
-                    .addFormDataPart("token", "X2mYcLtHCWGAuMKzZlpU0bqfQvSoDVhn")
+                    .addFormDataPart("account", PluginConfig.Account.INSTANCE.getAccount())
+                    .addFormDataPart("password", PluginConfig.Account.INSTANCE.getPassword())
+                    .addFormDataPart("token", PluginConfig.Account.INSTANCE.getApiToken())
                     .addFormDataPart("model", "1")
                     .build();
             Request request = new Request.Builder()
@@ -61,9 +61,8 @@ public class APILogin extends JRawCommand {
             }
             String returnJson = response.body().source().readString(StandardCharsets.UTF_8);
             HashMap<String,String> returnMap = JsonDecoder.decodeAccountActionReturn(returnJson);
-            sender.sendMessage(new MessageChainBuilder()
-                    .append(returnMap.get("msg")).append("\n返回码为：")
-                    .append(returnMap.get("code")).build());
+            logger.info(returnMap.get("msg"));
+            logger.info("返回码为："+returnMap.get("code"));
             List<String> listCookies = response.headers("Set-Cookie");
             logger.info(listCookies.toString());
             listCookies.forEach((c)->{
