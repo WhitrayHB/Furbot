@@ -1,6 +1,7 @@
 package cn.whitrayhb.furbot.command;
 
 import cn.whitrayhb.furbot.FurbotMain;
+import cn.whitrayhb.furbot.data.FetchJson;
 import cn.whitrayhb.furbot.util.MessageListener;
 import io.ktor.client.features.Sender;
 import net.mamoe.mirai.console.command.CommandSender;
@@ -28,5 +29,8 @@ public abstract class CommandBase extends JRawCommand {
     }
     public String askForString(CommandSender sender, String question, int time) throws TimeoutException{
         return ask(sender,question,time).stream().filter(m -> m instanceof PlainText).findFirst().orElse(null).contentToString();
+    }
+    public String fetchJson(String url){
+        return FetchJson.fetchJson(url);
     }
 }

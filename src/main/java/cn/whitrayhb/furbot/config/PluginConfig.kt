@@ -24,4 +24,8 @@ class PluginConfig {
         @ValueDescription("投只兽命令CD时长")
         var postFurCD by value<Int>(300)
     }
+    object CloudBlacklist : AutoSavePluginConfig("CloudBlacklist") {
+        @ValueDescription("趣绮梦云黑 APIKey")
+        var apiKey by value<String>("")
+    }
 }

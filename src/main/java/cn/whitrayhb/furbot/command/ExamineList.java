@@ -1,14 +1,10 @@
 package cn.whitrayhb.furbot.command;
 
-import cn.whitrayhb.furbot.FurbotMain;
-import cn.whitrayhb.furbot.util.Cooler;
+
 import net.mamoe.mirai.console.command.CommandSender;
-import net.mamoe.mirai.console.command.java.JRawCommand;
 import net.mamoe.mirai.message.data.MessageChain;
-import net.mamoe.mirai.utils.MiraiLogger;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.ConcurrentHashMap;
 
 /*Todo*/
 public class ExamineList extends CommandBase {

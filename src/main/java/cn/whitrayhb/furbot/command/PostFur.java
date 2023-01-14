@@ -8,7 +8,6 @@ import cn.whitrayhb.furbot.util.Cooler;
 import cn.whitrayhb.furbot.util.MessageListener;
 import net.mamoe.mirai.console.command.CommandSender;
 import net.mamoe.mirai.console.command.ConsoleCommandSender;
-import net.mamoe.mirai.console.command.FriendCommandSender;
 import net.mamoe.mirai.contact.Group;
 import net.mamoe.mirai.message.data.*;
 import net.mamoe.mirai.utils.ExternalResource;
