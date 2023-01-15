@@ -44,6 +44,8 @@ public final class FurbotMain extends JavaPlugin {
     }
     public void configInitialize(){
         reloadPluginConfig(PluginConfig.Account.INSTANCE);
+        reloadPluginConfig(PluginConfig.CoolDown.INSTANCE);
+        reloadPluginConfig(PluginConfig.CloudBlacklist.INSTANCE);
         reloadPluginData(PluginData.Cookie.INSTANCE);
         //if(PluginConfig.Account.INSTANCE.getAccount().isEmpty())PluginConfig.Account.INSTANCE.setAccount("#请在此处填写账号");
         //if(PluginConfig.Account.INSTANCE.getPassword().isEmpty())PluginConfig.Account.INSTANCE.setPassword("#请在此处填写密码");
